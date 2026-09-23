@@ -46,7 +46,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("file", type=Path, help="PDF or single-frame image")
     parser.add_argument("-o", "--output", type=Path, help="output directory (default: next to input)")
-    parser.add_argument("-t", "--tier", choices=("nano", "flash", "pro"), required=True)
+    parser.add_argument("-t", "--tier", choices=("nano", "flash", "pro"), default="flash", help="parse tier (default: flash)")
     parser.add_argument("--pages", help="1-based PDF pages, e.g. 1-3,5")
     parser.add_argument("--keep-header-footer", choices=("true", "false"), default="false")
     parser.add_argument("--parse-chart", choices=("true", "false"), default="true")

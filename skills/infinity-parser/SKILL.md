@@ -19,7 +19,7 @@ Copy `.env.example` to `.env`, then set `INF_API_URL` to the API base URL and `I
 
 ## Input and options
 
-- Send `multipart/form-data` with required `file` and `tier` (`nano`, `flash`, or `pro`). The same fields apply to `/v1/parse` and `/v1/parse/stream`.
+- Send `multipart/form-data` with required `file` and optional `tier` (`nano`, `flash`, or `pro`; default `flash`). The same fields apply to `/v1/parse` and `/v1/parse/stream`.
 - PDFs and single-frame PNG, JPEG, WEBP, BMP, TIFF, and GIF are supported. The Gateway identifies content from bytes, so a wrong extension or MIME type does not prevent parsing.
 - Multi-frame images, HTML, URL strings, Office files, SVG, and archives are unsupported. Download a web URL or capture a webpage screenshot in the platform, then send the resulting PDF or image.
 
@@ -38,7 +38,7 @@ python3 skills/infinity-parser/scripts/parse.py /path/to/report.pdf \
   -o /path/to/output
 ```
 
-The command saves `report.json` and `report.md` in the `-o` directory. Omit `-o` to save them next to the input. Omit `--pages` to parse all pages. `--tier` is required. Use `--keep-header-footer true` to include header/footer text in Markdown or `--parse-chart false` to skip extra chart extraction. Partial page failures still save both files and return exit code 2.
+The command saves `report.json` and `report.md` in the `-o` directory. Omit `-o` to save them next to the input. Omit `--pages` to parse all pages. `--tier` defaults to Flash. Use `--keep-header-footer true` to include header/footer text in Markdown or `--parse-chart false` to skip extra chart extraction. Partial page failures still save both files and return exit code 2.
 
 For a direct API request, send `tier`:
 

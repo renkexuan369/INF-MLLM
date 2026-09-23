@@ -46,7 +46,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("file", type=Path, help="PDF or single-frame image")
     parser.add_argument("-o", "--output", type=Path, help="output directory (default: next to input)")
-    parser.add_argument("-t", "--tier", choices=("nano", "flash", "pro"), default="flash")
+    parser.add_argument("-t", "--tier", choices=("nano", "flash", "pro"), required=True)
     parser.add_argument("--pages", help="1-based PDF pages, e.g. 1-3,5")
     parser.add_argument("--keep-header-footer", action="store_true")
     parser.add_argument("--no-parse-chart", action="store_true")
@@ -59,7 +59,7 @@ def main():
         parser.error("INF_API_URL and INF_API_KEY are required in the skill .env or environment")
 
     fields = {
-        "model": f"infinity-parser-{args.tier}",
+        "tier": args.tier,
         "parse_chart": str(not args.no_parse_chart).lower(),
         "keep_header_footer": str(args.keep_header_footer).lower(),
     }

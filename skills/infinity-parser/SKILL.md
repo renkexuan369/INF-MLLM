@@ -19,7 +19,7 @@ Copy `.env.example` to `.env`, then set `INF_API_URL` to the API base URL and `I
 
 ## Input and options
 
-- Send `multipart/form-data` with required `file` and `model`.
+- Send `multipart/form-data` with required `file` and `tier` (`nano`, `flash`, or `pro`). The same fields apply to `/v1/parse` and `/v1/parse/stream`.
 - PDFs and single-frame PNG, JPEG, WEBP, BMP, TIFF, and GIF are supported. The Gateway identifies content from bytes, so a wrong extension or MIME type does not prevent parsing.
 - Multi-frame images, HTML, URL strings, Office files, SVG, and archives are unsupported. Download a web URL or capture a webpage screenshot in the platform, then send the resulting PDF or image.
 
@@ -34,9 +34,9 @@ python3 skills/infinity-parser/scripts/parse.py /path/to/report.pdf \
   --tier pro -o /path/to/output --pages 1-3,5
 ```
 
-The command saves `report.json` and `report.md` in the `-o` directory. Omit `-o` to save them next to the input. Omit `--pages` to parse all pages. The default tier is Flash. Use `--keep-header-footer` to include header/footer text in Markdown or `--no-parse-chart` to skip extra chart extraction. Partial page failures still save both files and return exit code 2.
+The command saves `report.json` and `report.md` in the `-o` directory. Omit `-o` to save them next to the input. Omit `--pages` to parse all pages. `--tier` is required. Use `--keep-header-footer` to include header/footer text in Markdown or `--no-parse-chart` to skip extra chart extraction. Partial page failures still save both files and return exit code 2.
 
-For a direct API request, use the `model` form field (the Python CLI calls this selection `--tier`):
+For a direct API request, send `tier`:
 
 ```bash
 set -a
@@ -45,7 +45,7 @@ set +a
 curl "${INF_API_URL%/}/v1/parse" \
   -H "Authorization: Bearer ${INF_API_KEY}" \
   -F 'file=@/path/to/report.pdf' \
-  -F 'model=infinity-parser-pro' \
+  -F 'tier=pro' \
   -F 'pages=1-3,5' \
   -F 'parse_chart=true' \
   -F 'keep_header_footer=false'
@@ -53,4 +53,4 @@ curl "${INF_API_URL%/}/v1/parse" \
 
 Read [references/api-reference.md](references/api-reference.md) for response and streaming event details.
 
-Use the multipart endpoint in preference to the legacy `/v1/chat/completions` JSON endpoint. That JSON endpoint accepts PDF Base64 only and requires `data:application/pdf;base64,...` plus a `.pdf` filename.
+Use the multipart endpoint in preference to the legacy `/v1/chat/completions` JSON endpoint. The OpenAI-compatible JSON endpoint still uses `model`; it accepts PDF Base64 only and requires `data:application/pdf;base64,...` plus a `.pdf` filename.

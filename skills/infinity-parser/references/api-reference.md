@@ -2,20 +2,20 @@
 
 ## Synchronous `/v1/parse`
 
-The POST request waits for the complete result. A partial PDF failure still returns HTTP 200, so inspect `failed_pages`. Unselected pages never appear there. Blocks keep original PDF page numbers and use bounding boxes normalized to 0–1. The response does not include preview page dimensions; retain platform preview metadata separately. Image/chart description failure is logged but does not enter `failed_pages`.
+The POST request requires `tier` (`nano`, `flash`, or `pro`) and waits for the complete result. A partial PDF failure still returns HTTP 200, so inspect `failed_pages`. Unselected pages never appear there. Blocks keep original PDF page numbers and use bounding boxes normalized to 0–1. The response does not include preview page dimensions; retain platform preview metadata separately. Image/chart description failure is logged but does not enter `failed_pages`. For Flash and Pro, `engine` is `inf_parser`.
 
 | Status | Meaning |
 | --- | --- |
-| 400 | Empty, invalid, or unsupported input; multi-frame image; incompatible model/input; invalid page selection |
+| 400 | Empty, invalid, or unsupported input; multi-frame image; incompatible tier/input; invalid page selection |
 | 413 | File exceeds size limit |
-| 422 | Missing form field or invalid field type |
+| 422 | Missing required `file` or `tier`, or invalid field type |
 | 502 | Upstream failure, including every selected PDF page failing |
 
 Business errors use `{"error":{"message":"...","type":"...","param":null,"code":null}}`. FastAPI returns `detail` for 422 form validation errors.
 
 ## Streaming `/v1/parse/stream`
 
-Use POST with the same multipart fields. The response is SSE (`text/event-stream`), and the response header and every event contain `request_id`. Events end with a blank line; each `data:` line contains one JSON object with text newlines escaped.
+Use POST with the same multipart fields, including required `tier`. The response is SSE (`text/event-stream`), and the response header and every event contain `request_id`. Events end with a blank line; each `data:` line contains one JSON object with text newlines escaped.
 
 | Event | Data |
 | --- | --- |

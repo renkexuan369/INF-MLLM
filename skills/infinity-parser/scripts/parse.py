@@ -96,7 +96,7 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     json_path = output / f"{args.file.stem}.json"
     md_path = output / f"{args.file.stem}.md"
-    json_path.write_bytes(raw)
+    json_path.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     md_path.write_text(result["markdown"], encoding="utf-8")
     print(f"Saved {json_path} and {md_path}")
     if result.get("failed_pages"):

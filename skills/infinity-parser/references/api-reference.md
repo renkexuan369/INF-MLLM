@@ -1,4 +1,4 @@
-# Gateway response contract
+# Parse API response contract
 
 ## Synchronous `/v1/parse`
 

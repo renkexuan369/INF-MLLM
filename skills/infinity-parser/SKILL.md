@@ -9,13 +9,13 @@ Submit one PDF or supported image per request to get Markdown and layout blocks.
 
 Copy `.env.example` to `.env`, then set `INF_API_URL` to the API base URL and `INF_API_KEY` to your key. The Python command reads `.env` automatically without printing the key. Environment variables with the same names override the file and can also be used without one.
 
-## Choose a model
+## Choose a tier
 
-| Model | Best for |
+| Tier | Best for |
 | --- | --- |
-| `infinity-parser-nano` | Digital PDFs with a real text layer and simple layouts. Fast and lightweight; GPU processing is rarely needed. |
-| `infinity-parser-flash` | Scanned documents and images with ordinary layouts. Balances speed and cost for high-volume processing. |
-| `infinity-parser-pro` | Complex documents with multi-column layouts, dense tables, formulas, handwriting, or poor-quality scans. |
+| Nano | Digital PDFs with a real text layer and simple layouts. Fast and lightweight; GPU processing is rarely needed. |
+| Flash | Scanned documents and images with ordinary layouts. Balances speed and cost for high-volume processing. |
+| Pro | Complex documents with multi-column layouts, dense tables, formulas, handwriting, or poor-quality scans. |
 
 ## Input and options
 
@@ -31,9 +31,26 @@ Copy `.env.example` to `.env`, then set `INF_API_URL` to the API base URL and `I
 
 ```bash
 python3 skills/infinity-parser/scripts/parse.py /path/to/report.pdf \
-  -m pro -o /path/to/output --pages 1-3,5
+  --tier pro -o /path/to/output --pages 1-3,5
 ```
 
-The command saves `report.json` and `report.md` in the `-o` directory. Omit `-o` to save them next to the input. Omit `--pages` to parse all pages. The default model is Flash. Use `--keep-header-footer` to include header/footer text in Markdown or `--no-parse-chart` to skip extra chart extraction. Partial page failures still save both files and return exit code 2. Read [references/gateway-api.md](references/gateway-api.md) for response and streaming event details.
+The command saves `report.json` and `report.md` in the `-o` directory. Omit `-o` to save them next to the input. Omit `--pages` to parse all pages. The default tier is Flash. Use `--keep-header-footer` to include header/footer text in Markdown or `--no-parse-chart` to skip extra chart extraction. Partial page failures still save both files and return exit code 2.
+
+For a direct API request, use the `model` form field (the Python CLI calls this selection `--tier`):
+
+```bash
+set -a
+source skills/infinity-parser/.env
+set +a
+curl "${INF_API_URL%/}/v1/parse" \
+  -H "Authorization: Bearer ${INF_API_KEY}" \
+  -F 'file=@/path/to/report.pdf' \
+  -F 'model=infinity-parser-pro' \
+  -F 'pages=1-3,5' \
+  -F 'parse_chart=true' \
+  -F 'keep_header_footer=false'
+```
+
+Read [references/api-reference.md](references/api-reference.md) for response and streaming event details.
 
 Use the multipart endpoint in preference to the legacy `/v1/chat/completions` JSON endpoint. That JSON endpoint accepts PDF Base64 only and requires `data:application/pdf;base64,...` plus a `.pdf` filename.

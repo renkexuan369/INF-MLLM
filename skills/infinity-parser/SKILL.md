@@ -34,7 +34,7 @@ python3 skills/infinity-parser/scripts/parse.py /path/to/report.pdf \
   --tier pro -o /path/to/output --pages 1-3,5
 ```
 
-The command saves `report.json` and `report.md` in the `-o` directory. Omit `-o` to save them next to the input. Omit `--pages` to parse all pages. `--tier` is required. Use `--keep-header-footer` to include header/footer text in Markdown or `--no-parse-chart` to skip extra chart extraction. Partial page failures still save both files and return exit code 2.
+The command saves `report.json` and `report.md` in the `-o` directory. Omit `-o` to save them next to the input. Omit `--pages` to parse all pages. `--tier` is required. Use `--keep-header-footer true` to include header/footer text in Markdown or `--parse-chart false` to skip extra chart extraction. Partial page failures still save both files and return exit code 2.
 
 For a direct API request, send `tier`:
 

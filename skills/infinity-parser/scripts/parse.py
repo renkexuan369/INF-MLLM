@@ -48,8 +48,8 @@ def main():
     parser.add_argument("-o", "--output", type=Path, help="output directory (default: next to input)")
     parser.add_argument("-t", "--tier", choices=("nano", "flash", "pro"), required=True)
     parser.add_argument("--pages", help="1-based PDF pages, e.g. 1-3,5")
-    parser.add_argument("--keep-header-footer", action="store_true")
-    parser.add_argument("--no-parse-chart", action="store_true")
+    parser.add_argument("--keep-header-footer", choices=("true", "false"), default="false")
+    parser.add_argument("--parse-chart", choices=("true", "false"), default="true")
     args = parser.parse_args()
 
     if not args.file.is_file():
@@ -60,8 +60,8 @@ def main():
 
     fields = {
         "tier": args.tier,
-        "parse_chart": str(not args.no_parse_chart).lower(),
-        "keep_header_footer": str(args.keep_header_footer).lower(),
+        "parse_chart": args.parse_chart,
+        "keep_header_footer": args.keep_header_footer,
     }
     if args.pages:
         fields["pages"] = args.pages

@@ -31,7 +31,11 @@ Copy `.env.example` to `.env`, then set `INF_API_URL` to the API base URL and `I
 
 ```bash
 python3 skills/infinity-parser/scripts/parse.py /path/to/report.pdf \
-  --tier pro -o /path/to/output --pages 1-3,5
+  --tier pro \
+  --pages 1-3,5 \
+  --parse-chart true \
+  --keep-header-footer false \
+  -o /path/to/output
 ```
 
 The command saves `report.json` and `report.md` in the `-o` directory. Omit `-o` to save them next to the input. Omit `--pages` to parse all pages. `--tier` is required. Use `--keep-header-footer true` to include header/footer text in Markdown or `--parse-chart false` to skip extra chart extraction. Partial page failures still save both files and return exit code 2.
